@@ -1,0 +1,91 @@
+/* Custom CookieConsent Theme */
+/* Apply to both .cc-colors class and :root for maximum compatibility */
+.cc-colors,
+:root {
+    color-scheme: light;
+
+    /* Background and text colors */
+    --cc-bg: #fff;
+    --cc-primary-color: #000000;
+    --cc-secondary-color: #353534;
+    --cc-title-color: #7b1b4f;
+
+    /* Primary button (Accept) */
+    --cc-btn-primary-bg: #7b1b4f;
+    --cc-btn-primary-color: #fff;
+    --cc-btn-primary-border-color: #7b1b4f;
+    --cc-btn-primary-hover-bg: #d64c6b;
+    --cc-btn-primary-hover-color: #fff;
+    --cc-btn-primary-hover-border-color: #d64c6b;
+
+    /* Secondary button (Reject/Preferences) */
+    --cc-btn-secondary-bg: #eaeff2;
+    --cc-btn-secondary-color: rgb(0, 0, 0);
+    --cc-btn-secondary-border-color: #eaeff2;
+    --cc-btn-secondary-hover-bg: #d64c6b;
+    --cc-btn-secondary-hover-color: #fff;
+    --cc-btn-secondary-hover-border-color: #d4dae0;
+
+    /* Cookie category blocks */
+    --cc-cookie-category-block-bg: #f0f4f7;
+    --cc-cookie-category-block-border: #f0f4f7;
+    --cc-cookie-category-block-hover-bg: #e9eff4;
+    --cc-cookie-category-block-hover-border: #e9eff4;
+    --cc-cookie-category-expanded-block-bg: transparent;
+    --cc-cookie-category-expanded-block-hover-bg: #dee4e9;
+
+    /* Toggle switches */
+    --cc-toggle-on-bg: #7b1b4f;
+    --cc-toggle-off-bg: #353534;
+    --cc-toggle-on-knob-bg: #fff;
+    --cc-toggle-off-knob-bg: #fff;
+    --cc-toggle-enabled-icon-color: #fff;
+    --cc-toggle-disabled-icon-color: #fff;
+    --cc-toggle-readonly-bg: #d5dee2;
+    --cc-toggle-readonly-knob-bg: #fff;
+    --cc-toggle-readonly-knob-icon-color: #d5dee2;
+
+    /* Borders and separators */
+    --cc-separator-border-color: #f0f4f7;
+    --cc-section-category-border: #f0f4f7;
+
+    /* Footer */
+    --cc-footer-bg: #eaeff2;
+    --cc-footer-color: #353534;
+    --cc-footer-border-color: #e4eaed;
+
+    /* Overlay */
+    --cc-overlay-bg: rgba(0, 0, 0, 0.5);
+
+    /* Scrollbar */
+    --cc-webkit-scrollbar-bg: #e5e7eb;
+    --cc-webkit-scrollbar-hover-bg: #9ca3af;
+
+    /* Border radius (optional - customize shape) */
+    --cc-btn-border-radius: 0.5rem;
+    --cc-modal-border-radius: 0.75rem;
+    --cc-pm-toggle-border-radius: 1rem;
+
+    /* Modal spacing */
+    --cc-modal-margin: 1rem;
+}
+
+/* Optional: Add custom styles for specific elements */
+#cc-main .toggle__icon:after {
+    border-radius: var(--cc-pm-toggle-border-radius);
+}
+
+#cc-main .cm__btn--close {
+    border-radius: var(--cc-btn-border-radius);
+}
+
+/* Custom title color using dedicated variable */
+#cc-main .cm__title {
+    color: var(--cc-title-color);
+}
+
+/* Consent ID in footer */
+#cc-main .cc-consent-id {
+    color: var(--cc-secondary-color);
+    font-size: 0.85em;
+}

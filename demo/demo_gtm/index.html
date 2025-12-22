@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" class="cc-colors">
+<head>
+    <meta charset="UTF-8">
+    <title>CookieConsent demo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../assets/demo.css">
+    <script src="../assets/demo.js" defer></script>
+
+    <!-- Load plugin css -->
+    <link rel="stylesheet" href="../../dist/cc.css">
+    
+    <!-- Load custom theme -->
+    <link rel="stylesheet" href="cc-colors.css">
+
+    <!-- 1. Default consent state - MUST be FIRST, before GTM -->
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+
+        gtag('consent', 'default', {
+            'analytics_storage': 'denied',
+            'functionality_storage': 'granted',
+            'personalization_storage': 'denied',
+            'security_storage': 'granted',
+            'ad_storage': 'denied',
+            'ad_user_data': 'denied',
+            'ad_personalization': 'denied',
+        });
+
+        gtag('set', 'ads_data_redaction', false);
+        gtag('set', 'url_passthrough', true);
+    </script>
+
+    <!-- 2. Google Tag Manager (replace GTM-XXXXXX) -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-XXXXXX');</script>
+</head>
+<body>
+
+    <h1><a href="https://orestbida.com/demo-projects/cookieconsent/" target="_blank" class="demo-title">CookieConsent 🡥</a></h1>
+    <h2>Example configuration with Google Tag Manager</h2>
+    <br>
+    <p>Check your <a href="https://developer.chrome.com/docs/devtools/shortcuts/#open" target="_blank">browser's console 🡥</a> to see what's happening!</p>
+    <button class="btn" type="button" data-cc="show-preferencesModal">Cookie preferences</button>
+
+    <!-- 3. Load CookieConsent plugin - handles consent updates via onConsent/onChange callbacks -->
+    <script type="module" src="cookieconsent-init.js"></script>
+
+</body>
+</html>
