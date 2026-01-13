@@ -191,11 +191,20 @@ export const logConsentToEndpoint = (event) => {
 
     fetch(endpoint, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+            'Content-Type': 'application/json',
+            'Prefer': 'return=minimal'
+        },
         body: JSON.stringify(consentData),
         keepalive: true
     })
-    .then(r => debug(`CookieConsent [${event}] Saved:`, r.status))
+    .then(r => {
+        if (!r.ok) {
+            debug(`CookieConsent [${event}] Error: ${r.status} ${r.statusText}`);
+        } else {
+            debug(`CookieConsent [${event}] Saved:`, r.status);
+        }
+    })
     .catch(e => debug(`CookieConsent [${event}] Error:`, e));
 };
 

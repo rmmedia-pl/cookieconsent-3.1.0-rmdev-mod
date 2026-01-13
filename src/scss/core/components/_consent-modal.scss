@@ -204,9 +204,7 @@ $footer-links-gap: 1.3rem;
         font-weight: $font-weight-bold;
         font-size: .82em;
         min-height: $btn-height;
-        padding: 1.2em 1em;
-        padding-top: 1.3em;
-        padding-bottom: 1.3em;
+        padding: 1.3em 1em;
         border-radius: var(--cc-btn-border-radius);
 
         &:hover{
@@ -741,6 +739,7 @@ $footer-links-gap: 1.3rem;
 
         .cm__btn{
             flex: auto!important;
+            min-height: $btn-height-mobile;
         }
 
         .cm__link-group{
