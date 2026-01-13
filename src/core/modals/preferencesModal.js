@@ -431,6 +431,20 @@ export const createPreferencesModal = (api, createMainContainer) => {
         dom._pmAcceptAllBtn.innerHTML = acceptAllBtnData;
     }
 
+    if (acceptNecessaryBtnData) {
+        if (!dom._pmAcceptNecessaryBtn) {
+            dom._pmAcceptNecessaryBtn = createNode(BUTTON_TAG);
+            addClassPm(dom._pmAcceptNecessaryBtn, 'btn');
+            setAttribute(dom._pmAcceptNecessaryBtn, DATA_ROLE, 'necessary');
+            appendChild(_pmBtnGroup1, dom._pmAcceptNecessaryBtn);
+            addEvent(dom._pmAcceptNecessaryBtn, CLICK_EVENT, () =>
+                acceptHelper([])
+            );
+        }
+
+        dom._pmAcceptNecessaryBtn.innerHTML = acceptNecessaryBtnData;
+    }
+
     if (savePreferencesBtnData) {
         if (!dom._pmSavePreferencesBtn) {
             dom._pmSavePreferencesBtn = createNode(BUTTON_TAG);
@@ -447,19 +461,7 @@ export const createPreferencesModal = (api, createMainContainer) => {
         dom._pmSavePreferencesBtn.innerHTML = savePreferencesBtnData;
     }
 
-    if (acceptNecessaryBtnData) {
-        if (!dom._pmAcceptNecessaryBtn) {
-            dom._pmAcceptNecessaryBtn = createNode(BUTTON_TAG);
-            addClassPm(dom._pmAcceptNecessaryBtn, 'btn');
-            setAttribute(dom._pmAcceptNecessaryBtn, DATA_ROLE, 'necessary');
-            appendChild(_pmBtnGroup1, dom._pmAcceptNecessaryBtn);
-            addEvent(dom._pmAcceptNecessaryBtn, CLICK_EVENT, () =>
-                acceptHelper([])
-            );
-        }
 
-        dom._pmAcceptNecessaryBtn.innerHTML = acceptNecessaryBtnData;
-    }
 
     if (dom._pmNewBody) {
         dom._pm.replaceChild(dom._pmNewBody, dom._pmBody);

@@ -740,6 +740,8 @@ $footer-links-gap: 1.3rem;
         .cm__btn{
             flex: auto!important;
             min-height: $btn-height-mobile;
+            font-size: .9em !important;
+            padding: 1em .8em !important;
         }
 
         .cm__link-group{
@@ -813,7 +815,7 @@ $footer-links-gap: 1.3rem;
 
         .cm__btn{
             flex: auto!important;
-            font-size: .78em !important;
+            font-size: .9em !important;
             padding: 1em .8em !important;
         }
 

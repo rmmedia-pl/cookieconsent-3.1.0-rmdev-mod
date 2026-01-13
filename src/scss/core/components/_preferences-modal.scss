@@ -1004,6 +1004,11 @@ $service-toggle-knob-icon-width: 1.7px;
                 flex-direction: column-reverse!important;
             }
         }
+
+        .pm__btn{
+            font-size: .9em !important;
+            padding: 1em 0.8em !important;
+        }
     }
 
     .show--preferences #cc-main .cc--anim .pm{
@@ -1109,7 +1114,7 @@ $service-toggle-knob-icon-width: 1.7px;
         }
 
         .pm__btn{
-            font-size: .78em !important;
+            font-size: .9em !important;
             padding: 1em 0.8em !important;
         }
 
