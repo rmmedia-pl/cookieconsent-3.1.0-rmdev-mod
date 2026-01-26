@@ -121,7 +121,8 @@ export class GlobalState {
 
             consentLogging: {
                 enabled: false,
-                endpoint: ''
+                endpoint: '',
+                usePreferHeader: false
             }
         };
 

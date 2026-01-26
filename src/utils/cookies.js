@@ -165,7 +165,7 @@ const getGA4SessionId = () => {
 
 export const logConsentToEndpoint = (event) => {
     const config = globalObj._config;
-    const { enabled, endpoint } = config.consentLogging || {};
+    const { enabled, endpoint, usePreferHeader } = config.consentLogging || {};
 
     if (!enabled || !endpoint) {
         return;
@@ -189,12 +189,17 @@ export const logConsentToEndpoint = (event) => {
 
     debug(`CookieConsent [${event}] Consent data:`, consentData);
 
+    const headers = {
+        'Content-Type': 'application/json'
+    };
+
+    if (usePreferHeader) {
+        headers['Prefer'] = 'return=minimal';
+    }
+
     fetch(endpoint, {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Prefer': 'return=minimal'
-        },
+        headers: headers,
         body: JSON.stringify(consentData),
         keepalive: true
     })
