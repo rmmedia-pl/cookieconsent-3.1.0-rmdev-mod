@@ -193,7 +193,6 @@ const pushToDataLayer = (consentId, event, acceptedCategories, rejectedCategorie
             'event': 'cc_info',
             'consent_id': consentId,
             'consent_event': event,
-            'cookies': acceptedCategories,
             'accepted_categories': acceptedCategories,
             'rejected_categories': rejectedCategories
         });

@@ -25,6 +25,11 @@ function gtag() { dataLayer.push(arguments); }
  * This function updates Google Consent Mode and pushes cc_info event
  */
 function sendPreferences() {
+    // Note: CookieConsent automatically pushes 'cc_info' event to dataLayer
+    // when pushToDataLayer is enabled (default: true)
+    // Event structure: { event: 'cc_info', consent_id, consent_event, accepted_categories, rejected_categories }
+    // No need to manually push it here!
+
     // Map CookieConsent categories to Google Consent Mode
     const categories = {
         analytics_storage: 'analytics',
