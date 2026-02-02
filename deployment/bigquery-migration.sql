@@ -82,11 +82,13 @@ UNION ALL
 SELECT 
   'New table' as source,
   COUNT(*) as row_count
-FROM `polwell-data-warehouse.consentmanager.logs_v2`;
+FROM `polwell-data-warehouse.consentmanager.logs_v2`
+WHERE DATE(created_at) >= '2020-01-01';  -- Partition filter required
 
 -- Check sample data
 SELECT *
 FROM `polwell-data-warehouse.consentmanager.logs_v2`
+WHERE DATE(created_at) >= CURRENT_DATE() - 30  -- Partition filter required
 ORDER BY created_at DESC
 LIMIT 10;
 
