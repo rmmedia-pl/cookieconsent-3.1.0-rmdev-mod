@@ -508,6 +508,8 @@ export const uuidv4 = () => {
  * @param {boolean} [saveListener]
  */
 export const addEvent = (elem, event, fn, saveListener) => {
+    if (!elem) return;
+    
     elem.addEventListener(event, fn);
 
     /**
