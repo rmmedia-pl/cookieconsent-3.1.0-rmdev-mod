@@ -193,12 +193,108 @@ SINGLE DATA SOURCE APPROACH
 
 -- Example: Create materialized view (updates every 4 hours)
 /*
-CREATE MATERIALIZED VIEW `polwell-data-warehouse.consentmanager.mv_consent_dashboard`
+CREATE MATERIALIZED VIEW `polwell-data-warehouse.consentmanager.mv_consent_analytics`
 PARTITION BY date
 CLUSTER BY hostname
 OPTIONS(
   enable_refresh = true,
   refresh_interval_minutes = 240
 ) AS
-SELECT * FROM `polwell-data-warehouse.consentmanager.v_consent_dashboard`;
+SELECT * FROM `polwell-data-warehouse.consentmanager.cc_logs_stats`;
+*/
+
+-- ============================================================================
+-- LOOKER STUDIO CALCULATED FIELDS
+-- ============================================================================
+-- Create these as Calculated Fields in Looker Studio
+-- All should be formatted as Percent (0.00%)
+-- ============================================================================
+
+/*
+1. CONVERSION RATES (Funnel Analysis)
+======================================
+
+Conversion Rate
+---------------
+Formula: first_consents / modal_views
+Description: Percentage of users who gave consent after seeing the modal
+Format: Percent (0.00%)
+
+Update Rate
+-----------
+Formula: consent_updates / first_consents
+Description: Percentage of users who updated their consent after initial acceptance
+Format: Percent (0.00%)
+
+Engagement Rate
+---------------
+Formula: total_interactions / modal_views
+Description: Overall engagement rate (first consents + updates)
+Format: Percent (0.00%)
+
+
+2. ACCEPT TYPE DISTRIBUTION
+============================
+
+Accept All Percentage
+---------------------
+Formula: accept_all_count / total_first_consents_with_type
+Description: Percentage of users who accepted all cookies
+Format: Percent (0.00%)
+
+Accept Necessary Percentage
+----------------------------
+Formula: accept_necessary_count / total_first_consents_with_type
+Description: Percentage of users who accepted only necessary cookies
+Format: Percent (0.00%)
+
+Accept Custom Percentage
+------------------------
+Formula: accept_custom_count / total_first_consents_with_type
+Description: Percentage of users who made custom selection
+Format: Percent (0.00%)
+
+
+3. CATEGORY ACCEPTANCE RATES
+=============================
+
+Analytics Acceptance Rate
+-------------------------
+Formula: analytics_accepts / total_consents_with_categories
+Description: Percentage of consents that included analytics category
+Format: Percent (0.00%)
+
+Marketing Acceptance Rate
+--------------------------
+Formula: marketing_accepts / total_consents_with_categories
+Description: Percentage of consents that included marketing category
+Format: Percent (0.00%)
+
+Personalization Acceptance Rate
+--------------------------------
+Formula: personalization_accepts / total_consents_with_categories
+Description: Percentage of consents that included personalization category
+Format: Percent (0.00%)
+
+Necessary Acceptance Rate
+--------------------------
+Formula: necessary_accepts / total_consents_with_categories
+Description: Percentage of consents that included necessary category
+Format: Percent (0.00%)
+
+Functionality Acceptance Rate
+------------------------------
+Formula: functionality_accepts / total_consents_with_categories
+Description: Percentage of consents that included functionality category
+Format: Percent (0.00%)
+
+
+SUMMARY
+=======
+Total Calculated Fields: 8
+- 3 Conversion/Funnel rates
+- 3 Accept type percentages
+- 5 Category acceptance rates (you can create all or just the ones you need)
+
+All formulas use simple division - the view provides both numerators and denominators.
 */
