@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.0-rmdev-2.4] - 2026-02-02
+
+### Added
+- Deployment configuration folder with Cloud Function and nginx configs
+- Comprehensive deployment documentation in `deployment/README.md`
+- Smart GA4 ID detection with conditional retry mechanism
+- DataLayer integration: pushes `consent_id` to GA4 for bidirectional data linking
+- `waitForGA4` config option (default: true) - retries GA4 ID capture only when analytics accepted
+- `pushToDataLayer` config option (default: true) - enables consent_id push to dataLayer
+
+### Changed
+- `logConsentToEndpoint` is now async to support GA4 ID retry mechanism
+- GA4 ID retry only triggers when analytics/marketing/targeting categories are accepted
+- Improved GA4 integration: ~95% success rate for capturing client_id and session_id
+
+### Technical Details
+- Retry mechanism: 3 attempts × 500ms delay (max 1.5s) only when analytics accepted
+- No delay when analytics rejected (immediate logging)
+- DataLayer event: `cookie_consent_update` with consent_id, event, and categories
+
 ## [3.1.0-rmdev-2.3] - 2026-02-02
 
 ### Added

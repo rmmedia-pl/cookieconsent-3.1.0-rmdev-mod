@@ -163,9 +163,46 @@ const getGA4SessionId = () => {
     return null;
 };
 
-export const logConsentToEndpoint = (event) => {
+const shouldWaitForGA4 = (acceptedCategories) => {
+    const analyticsCategories = ['analytics', 'marketing', 'targeting'];
+    return acceptedCategories.some(cat => 
+        analyticsCategories.some(ac => cat.toLowerCase().includes(ac))
+    );
+};
+
+const getGA4IdsWithRetry = async (maxRetries = 3, delayMs = 500) => {
+    for (let i = 0; i < maxRetries; i++) {
+        const clientId = getGA4ClientId();
+        const sessionId = getGA4SessionId();
+        
+        if (clientId || sessionId) {
+            return { clientId, sessionId };
+        }
+        
+        if (i < maxRetries - 1) {
+            await new Promise(resolve => setTimeout(resolve, delayMs));
+        }
+    }
+    
+    return { clientId: null, sessionId: null };
+};
+
+const pushToDataLayer = (consentId, event, acceptedCategories, rejectedCategories) => {
+    if (typeof window !== 'undefined' && window.dataLayer) {
+        window.dataLayer.push({
+            'event': 'cookie_consent_update',
+            'consent_id': consentId,
+            'consent_event': event,
+            'accepted_categories': acceptedCategories,
+            'rejected_categories': rejectedCategories
+        });
+        debug('CookieConsent: Pushed to dataLayer', { consent_id: consentId });
+    }
+};
+
+export const logConsentToEndpoint = async (event) => {
     const config = globalObj._config;
-    const { enabled, endpoint, usePreferHeader } = config.consentLogging || {};
+    const { enabled, endpoint, usePreferHeader, waitForGA4 = true, pushToDataLayer: enableDataLayerPush = true } = config.consentLogging || {};
 
     if (!enabled || !endpoint) {
         return;
@@ -173,15 +210,32 @@ export const logConsentToEndpoint = (event) => {
 
     const state = globalObj._state;
     const { accepted, rejected } = getCurrentCategoriesState();
+    const consentId = localStorageManager._getItem('cc_consent_id') || state._consentId;
+
+    let ga4ClientId = null;
+    let ga4SessionId = null;
+    
+    if (waitForGA4 && shouldWaitForGA4(accepted)) {
+        const ga4Ids = await getGA4IdsWithRetry(3, 500);
+        ga4ClientId = ga4Ids.clientId;
+        ga4SessionId = ga4Ids.sessionId;
+    } else {
+        ga4ClientId = getGA4ClientId();
+        ga4SessionId = getGA4SessionId();
+    }
+
+    if (enableDataLayerPush) {
+        pushToDataLayer(consentId, event, accepted.join(', '), rejected.join(', '));
+    }
 
     const consentData = {
         event: event,
-        consent_id: localStorageManager._getItem('cc_consent_id') || state._consentId,
+        consent_id: consentId,
         accept_type: state._acceptType || '',
         accepted_categories: accepted.join(', '),
         rejected_categories: rejected.join(', '),
-        ga4_client_id: getGA4ClientId(),
-        ga4_session_id: getGA4SessionId(),
+        ga4_client_id: ga4ClientId,
+        ga4_session_id: ga4SessionId,
         user_agent: navigator.userAgent,
         hostname: window.location.hostname,
         page_url: window.location.href

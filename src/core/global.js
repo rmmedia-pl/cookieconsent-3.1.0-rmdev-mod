@@ -122,7 +122,9 @@ export class GlobalState {
             consentLogging: {
                 enabled: false,
                 endpoint: '',
-                usePreferHeader: false
+                usePreferHeader: false,
+                waitForGA4: true,
+                pushToDataLayer: true
             }
         };
 
