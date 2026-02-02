@@ -207,6 +207,7 @@ SELECT * FROM `polwell-data-warehouse.consentmanager.cc_logs_stats`;
 -- LOOKER STUDIO CALCULATED FIELDS
 -- ============================================================================
 -- Create these as Calculated Fields in Looker Studio
+-- IMPORTANT: Always use SUM() aggregation, NOT AVG()
 -- All should be formatted as Percent (0.00%)
 -- ============================================================================
 
@@ -216,21 +217,24 @@ SELECT * FROM `polwell-data-warehouse.consentmanager.cc_logs_stats`;
 
 Conversion Rate
 ---------------
-Formula: first_consents / modal_views
+Formula: SUM(first_consents) / SUM(modal_views)
 Description: Percentage of users who gave consent after seeing the modal
 Format: Percent (0.00%)
+Aggregation: None (SUM already in formula)
 
 Update Rate
 -----------
-Formula: consent_updates / first_consents
+Formula: SUM(consent_updates) / SUM(first_consents)
 Description: Percentage of users who updated their consent after initial acceptance
 Format: Percent (0.00%)
+Aggregation: None (SUM already in formula)
 
 Engagement Rate
 ---------------
-Formula: total_interactions / modal_views
+Formula: SUM(total_interactions) / SUM(modal_views)
 Description: Overall engagement rate (first consents + updates)
 Format: Percent (0.00%)
+Aggregation: None (SUM already in formula)
 
 
 2. ACCEPT TYPE DISTRIBUTION
@@ -238,21 +242,24 @@ Format: Percent (0.00%)
 
 Accept All Percentage
 ---------------------
-Formula: accept_all_count / total_first_consents_with_type
+Formula: SUM(accept_all_count) / SUM(total_first_consents_with_type)
 Description: Percentage of users who accepted all cookies
 Format: Percent (0.00%)
+Aggregation: None (SUM already in formula)
 
 Accept Necessary Percentage
 ----------------------------
-Formula: accept_necessary_count / total_first_consents_with_type
+Formula: SUM(accept_necessary_count) / SUM(total_first_consents_with_type)
 Description: Percentage of users who accepted only necessary cookies
 Format: Percent (0.00%)
+Aggregation: None (SUM already in formula)
 
 Accept Custom Percentage
 ------------------------
-Formula: accept_custom_count / total_first_consents_with_type
+Formula: SUM(accept_custom_count) / SUM(total_first_consents_with_type)
 Description: Percentage of users who made custom selection
 Format: Percent (0.00%)
+Aggregation: None (SUM already in formula)
 
 
 3. CATEGORY ACCEPTANCE RATES
@@ -260,33 +267,38 @@ Format: Percent (0.00%)
 
 Analytics Acceptance Rate
 -------------------------
-Formula: analytics_accepts / total_consents_with_categories
+Formula: SUM(analytics_accepts) / SUM(total_consents_with_categories)
 Description: Percentage of consents that included analytics category
 Format: Percent (0.00%)
+Aggregation: None (SUM already in formula)
 
 Marketing Acceptance Rate
 --------------------------
-Formula: marketing_accepts / total_consents_with_categories
+Formula: SUM(marketing_accepts) / SUM(total_consents_with_categories)
 Description: Percentage of consents that included marketing category
 Format: Percent (0.00%)
+Aggregation: None (SUM already in formula)
 
 Personalization Acceptance Rate
 --------------------------------
-Formula: personalization_accepts / total_consents_with_categories
+Formula: SUM(personalization_accepts) / SUM(total_consents_with_categories)
 Description: Percentage of consents that included personalization category
 Format: Percent (0.00%)
+Aggregation: None (SUM already in formula)
 
 Necessary Acceptance Rate
 --------------------------
-Formula: necessary_accepts / total_consents_with_categories
+Formula: SUM(necessary_accepts) / SUM(total_consents_with_categories)
 Description: Percentage of consents that included necessary category
 Format: Percent (0.00%)
+Aggregation: None (SUM already in formula)
 
 Functionality Acceptance Rate
 ------------------------------
-Formula: functionality_accepts / total_consents_with_categories
+Formula: SUM(functionality_accepts) / SUM(total_consents_with_categories)
 Description: Percentage of consents that included functionality category
 Format: Percent (0.00%)
+Aggregation: None (SUM already in formula)
 
 
 SUMMARY
@@ -296,5 +308,9 @@ Total Calculated Fields: 8
 - 3 Accept type percentages
 - 5 Category acceptance rates (you can create all or just the ones you need)
 
-All formulas use simple division - the view provides both numerators and denominators.
+IMPORTANT NOTES:
+- Always use SUM() aggregation in formulas, NOT AVG()
+- SUM ensures correct aggregation regardless of grouping level (date, hostname, or total)
+- Set Aggregation to "None" in Looker Studio since SUM is already in the formula
+- Format all fields as Percent (0.00%)
 */
