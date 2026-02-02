@@ -95,7 +95,37 @@ The migration script will:
 
 **Estimated time**: ~1-5 minutes depending on data size
 
-## 3. Nginx Reverse Proxy
+## 3. BigQuery View for Looker Studio
+
+Create single comprehensive analytical view:
+
+```bash
+# Execute view creation script
+bq query --use_legacy_sql=false < deployment/bigquery-views.sql
+```
+
+### Single Data Source: `v_consent_analytics`
+
+**All metrics in one view** - grouped by date and hostname:
+
+| Metric Group | Metrics | Use For |
+|--------------|---------|---------|
+| **Funnel** | modal_views, first_consents, consent_updates, total_interactions | Conversion analysis |
+| **Accept Types** | accept_all_count, accept_necessary_count, accept_custom_count | User preferences |
+| **Categories** | analytics_accepts, marketing_accepts, personalization_accepts, etc. | Category analysis |
+
+### Key Calculated Fields (Looker Studio)
+
+- **Conversion Rate**: `first_consents / modal_views`
+- **Update Rate**: `consent_updates / first_consents`
+- **Accept All %**: `accept_all_count / total_first_consents_with_type`
+- **Category %**: `analytics_accepts / total_consents_with_categories`
+
+**Benefits**: Single data source, all dashboards from one view, consistent metrics across reports.
+
+See `bigquery-views.sql` for detailed inline documentation of each metric.
+
+## 4. Nginx Reverse Proxy
 
 ### Instalacja
 
