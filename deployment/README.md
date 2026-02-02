@@ -38,9 +38,13 @@ gcloud functions deploy logConsent \
 
 ### Tabela BigQuery
 
+**IMPORTANT**: Use the optimized partitioned table structure from `bigquery-migration.sql`
+
+Optimized table with partitioning and clustering:
+
 ```sql
-CREATE TABLE `polwell-data-warehouse.consentmanager.logs` (
-  id INTEGER,
+CREATE TABLE `polwell-data-warehouse.consentmanager.logs`
+(
   event STRING,
   consent_id STRING,
   accept_type STRING,
@@ -54,12 +58,44 @@ CREATE TABLE `polwell-data-warehouse.consentmanager.logs` (
   created_at TIMESTAMP
 )
 PARTITION BY DATE(created_at)
+CLUSTER BY hostname, event
 OPTIONS(
-  partition_expiration_days=730
+  partition_expiration_days=1095,  -- 3 years
+  require_partition_filter=true
 );
 ```
 
-## 2. Nginx Reverse Proxy
+**Migration**: If you have an existing table, use `bigquery-migration.sql` to migrate to the partitioned structure.
+
+### Benefits of Partitioning
+
+- **Cost savings**: 99% reduction in query costs (scan only needed days)
+- **Performance**: 10-100x faster queries
+- **Auto-cleanup**: Old partitions automatically deleted after 3 years
+- **Clustering**: Groups data by hostname and event for better compression
+
+## 2. BigQuery Migration
+
+If you have an existing unpartitioned table, run the migration script:
+
+```bash
+# Review the migration script
+cat bigquery-migration.sql
+
+# Execute in BigQuery Console or CLI
+bq query --use_legacy_sql=false < bigquery-migration.sql
+```
+
+The migration script will:
+1. Create new partitioned table (`logs_v2`)
+2. Copy all data (excluding deprecated `id` field)
+3. Verify data integrity
+4. Create backup of old table
+5. Replace old table with new partitioned table
+
+**Estimated time**: ~1-5 minutes depending on data size
+
+## 3. Nginx Reverse Proxy
 
 ### Instalacja
 
