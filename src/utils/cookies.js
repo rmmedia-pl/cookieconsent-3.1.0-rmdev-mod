@@ -190,9 +190,10 @@ const getGA4IdsWithRetry = async (maxRetries = 3, delayMs = 500) => {
 const pushToDataLayer = (consentId, event, acceptedCategories, rejectedCategories) => {
     if (typeof window !== 'undefined' && window.dataLayer) {
         window.dataLayer.push({
-            'event': 'cookie_consent_update',
+            'event': 'cc_info',
             'consent_id': consentId,
             'consent_event': event,
+            'cookies': acceptedCategories,
             'accepted_categories': acceptedCategories,
             'rejected_categories': rejectedCategories
         });
