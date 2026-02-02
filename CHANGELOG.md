@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.0-rmdev-2.3] - 2026-02-02
+
+### Added
+- BigQuery integration for consent logging via Cloud Function
+- Batch insert optimization (200 records or 1 minute interval) for cost efficiency
+- Cloud Function proxy endpoint for secure data logging
+
+### Changed
+- Migrated from Supabase to BigQuery for consent data storage
+- Improved CORS handling with proper header management in nginx reverse proxy
+- Optimized consent logging architecture: Browser → nginx → Cloud Function → BigQuery
+
+### Technical Details
+- Cloud Function with batch inserts (~$0.09/month for 50k records)
+- BigQuery table: `polwell-data-warehouse.consentmanager.logs`
+- Nginx proxy at `cc.flkpro.com/ccdata` hides Cloud Function URL
+
 ## [3.1.0-rmdev-2.2] - 2026-01-26
 
 ### Fixed
