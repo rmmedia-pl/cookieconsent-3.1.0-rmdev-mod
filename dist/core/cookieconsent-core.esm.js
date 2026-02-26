@@ -1,5 +1,5 @@
 /*!
-* CookieConsent 3.1.0-rmdev-2.4
+* CookieConsent 3.1.0-rmdev-2.5
 * https://github.com/orestbida/cookieconsent
 * Author Orest Bida
 * Released under the MIT License

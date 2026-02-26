@@ -1,4 +1,5 @@
 import { globalObj } from '../global';
+import { getConsentId } from '../consent-id';
 import {
     createNode,
     addClass,
@@ -129,7 +130,11 @@ export const createPreferencesModal = (api, createMainContainer) => {
         var _pmBtnGroup1 = createNode(DIV_TAG);
         addClassPm(_pmBtnGroup1, BTN_GROUP_CLASS);
 
+        dom._pmFooterRight = createNode(DIV_TAG);
+        addClassPm(dom._pmFooterRight, 'footer-right');
+
         appendChild(dom._pmFooter, _pmBtnGroup1);
+        appendChild(dom._pmFooter, dom._pmFooterRight);
 
         appendChild(dom._pmHeader, dom._pmTitle);
         appendChild(dom._pmHeader, dom._pmCloseBtn);
@@ -417,6 +422,21 @@ export const createPreferencesModal = (api, createMainContainer) => {
 
     });
 
+    // Add Consent ID section at the end of body content
+    const consentId = getConsentId();
+    if (consentId && modalData.consentIdLabel) {
+        const currentBody = dom._pmNewBody || dom._pmBody;
+        
+        if (!dom._pmConsentIdSection) {
+            dom._pmConsentIdSection = createNode(DIV_TAG);
+            addClassPm(dom._pmConsentIdSection, 'section');
+            addClassPm(dom._pmConsentIdSection, 'consent-id-section');
+        }
+        
+        dom._pmConsentIdSection.innerHTML = `<div class="pm__section-desc-wrapper"><p class="cc-consent-id-text">${modalData.consentIdLabel}: <strong>${consentId}</strong></p></div>`;
+        appendChild(currentBody, dom._pmConsentIdSection);
+    }
+
     if (acceptAllBtnData) {
         if (!dom._pmAcceptAllBtn) {
             dom._pmAcceptAllBtn = createNode(BUTTON_TAG);
@@ -460,8 +480,6 @@ export const createPreferencesModal = (api, createMainContainer) => {
 
         dom._pmSavePreferencesBtn.innerHTML = savePreferencesBtnData;
     }
-
-
 
     if (dom._pmNewBody) {
         dom._pm.replaceChild(dom._pmNewBody, dom._pmBody);

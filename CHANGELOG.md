@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.0-rmdev-2.5] - 2026-02-26
+
+### Added
+- Consent ID display in preferences modal (settings window)
+- Consent ID section appears as visible content after all cookie sections
+
+### Changed
+- Updated rollup to 4.59.0
+- Updated eslint to 9.39.3
+- Consent ID now displays in both consent modal footer and preferences modal body
+
+### Fixed
+- Security patches for ajv and minimatch vulnerabilities
+
 ## [3.1.0-rmdev-2.4] - 2026-02-02
 
 ### Added

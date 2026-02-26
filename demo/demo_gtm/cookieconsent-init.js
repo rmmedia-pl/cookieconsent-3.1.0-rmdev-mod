@@ -173,6 +173,7 @@ CookieConsent.run({
                     acceptAllBtn: 'Akceptuję wszystkie',
                     acceptNecessaryBtn: 'Odrzucam',
                     savePreferencesBtn: 'Zapisz wybrane',
+                    consentIdLabel: 'ID zgody',
                     sections: [
                         {
                             title: 'Zarządzaj plikami cookie',

@@ -1,115 +1,4 @@
 -- ============================================================================
--- BigQuery Migration Script: Cookie Consent Logs
--- ============================================================================
--- Purpose: Migrate from unpartitioned table to partitioned table with clustering
--- Version: 2.4
--- Date: 2026-02-02
--- ============================================================================
-
--- STEP 1: Create new partitioned table
--- ============================================================================
-CREATE TABLE `polwell-data-warehouse.consentmanager.logs_v2`
-(
-  -- Event information
-  event STRING OPTIONS(description="Event type: consent_modal_view, accept, update"),
-  consent_id STRING OPTIONS(description="Unique consent ID (UUID)"),
-  accept_type STRING OPTIONS(description="Accept type: all, necessary, custom"),
-  
-  -- Categories
-  accepted_categories STRING OPTIONS(description="Comma-separated accepted categories"),
-  rejected_categories STRING OPTIONS(description="Comma-separated rejected categories"),
-  
-  -- GA4 Integration
-  ga4_client_id STRING OPTIONS(description="Google Analytics 4 Client ID"),
-  ga4_session_id STRING OPTIONS(description="Google Analytics 4 Session ID"),
-  
-  -- User context
-  user_agent STRING OPTIONS(description="Browser user agent string"),
-  hostname STRING OPTIONS(description="Website hostname"),
-  page_url STRING OPTIONS(description="Full page URL where consent was given"),
-  
-  -- Timestamp
-  created_at TIMESTAMP OPTIONS(description="Timestamp when consent was logged")
-)
-PARTITION BY DATE(created_at)
-CLUSTER BY hostname, event
-OPTIONS(
-  description="Cookie consent logs with daily partitioning and 3-year retention",
-  partition_expiration_days=1095,  -- 3 years (365 * 3)
-  require_partition_filter=true    -- Force partition filter in queries for cost optimization
-);
-
--- STEP 2: Copy data from old table to new table
--- ============================================================================
--- This will copy all existing data, excluding the 'id' field
-INSERT INTO `polwell-data-warehouse.consentmanager.logs_v2`
-(
-  event,
-  consent_id,
-  accept_type,
-  accepted_categories,
-  rejected_categories,
-  ga4_client_id,
-  ga4_session_id,
-  user_agent,
-  hostname,
-  page_url,
-  created_at
-)
-SELECT
-  event,
-  consent_id,
-  accept_type,
-  accepted_categories,
-  rejected_categories,
-  ga4_client_id,
-  ga4_session_id,
-  user_agent,
-  hostname,
-  page_url,
-  created_at
-FROM `polwell-data-warehouse.consentmanager.logs`
-WHERE created_at IS NOT NULL;  -- Ensure we only copy valid records
-
--- STEP 3: Verify data migration
--- ============================================================================
--- Check row counts match
-SELECT 
-  'Old table' as source,
-  COUNT(*) as row_count
-FROM `polwell-data-warehouse.consentmanager.logs`
-UNION ALL
-SELECT 
-  'New table' as source,
-  COUNT(*) as row_count
-FROM `polwell-data-warehouse.consentmanager.logs_v2`
-WHERE DATE(created_at) >= '2020-01-01';  -- Partition filter required
-
--- Check sample data
-SELECT *
-FROM `polwell-data-warehouse.consentmanager.logs_v2`
-WHERE DATE(created_at) >= CURRENT_DATE() - 30  -- Partition filter required
-ORDER BY created_at DESC
-LIMIT 10;
-
--- STEP 4: Backup old table (OPTIONAL - recommended)
--- ============================================================================
--- Create backup table before dropping
-CREATE TABLE `polwell-data-warehouse.consentmanager.logs_backup`
-CLONE `polwell-data-warehouse.consentmanager.logs`;
-
--- STEP 5: Drop old table
--- ============================================================================
--- WARNING: This will permanently delete the old table
--- Make sure STEP 3 verification passed before running this!
-DROP TABLE `polwell-data-warehouse.consentmanager.logs`;
-
--- STEP 6: Rename new table to original name
--- ============================================================================
-ALTER TABLE `polwell-data-warehouse.consentmanager.logs_v2`
-RENAME TO logs;
-
--- ============================================================================
 -- VERIFICATION QUERIES
 -- ============================================================================
 
@@ -187,6 +76,38 @@ WHERE DATE(created_at) >= CURRENT_DATE() - 30
   AND event IN ('accept', 'update')
 GROUP BY date
 ORDER BY date DESC;
+
+-- Sprawdź jakie eventy masz
+SELECT 
+  event,
+  COUNT(*) as count
+FROM `polwell-data-warehouse.consentmanager.logs`
+WHERE DATE(created_at) >= CURRENT_DATE() - 90
+GROUP BY event
+ORDER BY count DESC;
+ 
+-- Sprawdź najnowsze rekordy
+SELECT 
+  created_at,
+  event,
+  hostname,
+  accepted_categories
+FROM `polwell-data-warehouse.consentmanager.logs`
+WHERE DATE(created_at) >= CURRENT_DATE() - 90
+ORDER BY created_at DESC
+LIMIT 20;
+ 
+-- Sprawdź czy masz jakiekolwiek dane
+SELECT 
+  COUNT(*) as total_rows,
+  MIN(created_at) as oldest,
+  MAX(created_at) as newest
+FROM `polwell-data-warehouse.consentmanager.logs`
+WHERE DATE(created_at) >= '2020-01-01';
+
+
+
+
 
 -- ============================================================================
 -- COST OPTIMIZATION NOTES
